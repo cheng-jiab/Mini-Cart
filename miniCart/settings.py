@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'category'
+    'category',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'miniCart.wsgi.application'
+
+#added manually in order to use custom user model
+AUTH_USER_MODEL =  'accounts.Account'
 
 
 # Database
