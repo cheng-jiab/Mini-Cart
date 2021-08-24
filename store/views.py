@@ -24,3 +24,16 @@ def store(request, categorySlug=None):
     }
     
     return render(request,'store/store.html', context)
+
+
+def productDetail(request, categorySlug=None, productSlug=None):
+    try:
+        #  "__" : to query using the attributes of the many-to-many-related model:
+        singleProduct = Product.objects.get(category__slug=categorySlug, slug=productSlug)
+    except Exception as e:
+        raise e
+
+    context = {
+        'singleProduct' : singleProduct
+    }
+    return render(request, 'store/productDetail.html', context)
