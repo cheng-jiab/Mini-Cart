@@ -1,6 +1,6 @@
-from django.http.response import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from store.models import Product
 from .models import Cart, CartItem
 
@@ -35,9 +35,46 @@ def addCart(request, productId):
         )
         cartItem.save()
         
-    return HttpResponse(cartItem.quantity)
+    
     return redirect('cart')
 
-def cart(request):
-    return render(request, 'store/cart.html')
+def removeCart(request, productId):
+    product = get_object_or_404(Product, id=productId)
+    cart = Cart.objects.get(cartId=_cartId(request))
+    cartItem = CartItem.objects.get(product=product, cart=cart)
+    if cartItem.quantity > 1:
+        cartItem.quantity -= 1
+        cartItem.save()
+    else:
+        cartItem.delete()
+    return redirect('cart')
+
+def removeItem(request, productId):
+    cart = Cart.objects.get(cartId=_cartId(request))
+    product = get_object_or_404(Product, id=productId)
+    cartItem = CartItem.objects.get(product=product, cart=cart)
+    cartItem.delete()
+    return redirect('cart')
+
+
+def cart(request, total=0, quantity=0, cartItems=None):
+    try:
+        cart = Cart.objects.get(cartId=_cartId(request))
+        cartItems = CartItem.objects.filter(cart=cart, isActive=True)
+        for cartItem in cartItems:
+            total += (cartItem.product.price * cartItem.quantity)
+            quantity += cartItem.quantity
+        tax = round((0.07*total),2)
+        totalAfterTax = total + tax
+    except ObjectDoesNotExist:
+        pass
+        
+    context = {
+        'total': total,
+        'quantity': quantity,
+        'cartItems': cartItems,
+        'tax': tax,
+        'totalAfterTax': totalAfterTax
+    }
+    return render(request, 'store/cart.html', context)
     
