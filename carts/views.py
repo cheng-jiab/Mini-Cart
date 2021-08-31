@@ -1,8 +1,9 @@
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from store.models import Product
+from store.models import Product, Variation
 from .models import Cart, CartItem
+
 
 # Create your views here.
 # How to use session: Ref https://docs.djangoproject.com/en/3.2/topics/http/sessions/#using-sessions-out-of-views
@@ -15,6 +16,16 @@ def _cartId(request):
 
 def addCart(request, productId):
     product = Product.objects.get(id=productId)
+    productVariation = []
+    if request.method == 'POST':
+        for item in request.POST:
+            value = request.POST[item]
+            try:
+                variation = Variation.objects.get(product=product, variationCategory__iexact=item, variationValue__iexact=value)
+                productVariation.append(variation)
+            except:
+                pass
+   
     try:
         cart = Cart.objects.get(cartId=_cartId(request))
     except Cart.DoesNotExist:
@@ -24,17 +35,20 @@ def addCart(request, productId):
         cart.save()
 
     try:
-        cartItem = CartItem.objects.get(product=product, cart=cart)
+        cartItem = CartItem.objects.get(product=product, cart=cart) 
         cartItem.quantity += 1
-        cartItem.save()
+        
     except CartItem.DoesNotExist:
         cartItem = CartItem.objects.create(
             product=product,
             quantity=1,
             cart=cart,
         )
-        cartItem.save()
         
+    if len(productVariation) > 0:
+        for item in productVariation:
+            cartItem.variations.add(item)
+    cartItem.save()
     
     return redirect('cart')
 
