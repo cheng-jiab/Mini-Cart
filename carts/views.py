@@ -16,13 +16,14 @@ def _cartId(request):
 
 def addCart(request, productId):
     product = Product.objects.get(id=productId)
-    productVariation = []
+    
+    #productVariation = []
     if request.method == 'POST':
         for item in request.POST:
             value = request.POST[item]
             try:
                 variation = Variation.objects.get(product=product, variationCategory__iexact=item, variationValue__iexact=value)
-                productVariation.append(variation)
+                
             except:
                 pass
    
@@ -33,9 +34,9 @@ def addCart(request, productId):
             cartId = _cartId(request)
         )
         cart.save()
-
+    
     try:
-        cartItem = CartItem.objects.get(product=product, cart=cart) 
+        cartItem = CartItem.objects.get(product=product, cart=cart, variation=variation) 
         cartItem.quantity += 1
         
     except CartItem.DoesNotExist:
@@ -43,19 +44,26 @@ def addCart(request, productId):
             product=product,
             quantity=1,
             cart=cart,
+            variation=variation
+            
         )
-        
+    '''    
     if len(productVariation) > 0:
         for item in productVariation:
             cartItem.variations.add(item)
+
+    '''
     cartItem.save()
-    
     return redirect('cart')
 
-def removeCart(request, productId):
-    product = get_object_or_404(Product, id=productId)
-    cart = Cart.objects.get(cartId=_cartId(request))
-    cartItem = CartItem.objects.get(product=product, cart=cart)
+def increaseCartItem(request, cartItemId):
+    cartItem = CartItem.objects.get(id=cartItemId)
+    cartItem.quantity += 1
+    cartItem.save()
+    return redirect('cart')
+
+def decreaseCartItem(request, cartItemId):
+    cartItem = CartItem.objects.get(id=cartItemId)
     if cartItem.quantity > 1:
         cartItem.quantity -= 1
         cartItem.save()
@@ -63,10 +71,8 @@ def removeCart(request, productId):
         cartItem.delete()
     return redirect('cart')
 
-def removeItem(request, productId):
-    cart = Cart.objects.get(cartId=_cartId(request))
-    product = get_object_or_404(Product, id=productId)
-    cartItem = CartItem.objects.get(product=product, cart=cart)
+def removeItem(request, cartItemId):
+    cartItem = CartItem.objects.get(id=cartItemId)
     cartItem.delete()
     return redirect('cart')
 

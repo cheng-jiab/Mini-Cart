@@ -36,28 +36,17 @@
       <hr>
           <div class="row">
               <div class="item-option-select">
-                  <h6>Choose Color</h6>
-                  <select name="color" class="form-control" required>
-                    <option value="" disabled selected>Choose Color Here</option>
+                  <h6>Choose {{singleProduct.variationCategory}}</h6>
+                  <select name="{{singleProduct.variationCategory}}" class="form-control" required>
+                    <option value="" disabled selected>Choose {{singleProduct.variationCategory}} Here</option>
                     <!--Reverse Lookup Ref: https://stackoverflow.com/questions/15306897/django-reverse-lookup-of-foreign-keys-->
-                    {% for i in singleProduct.variation_set.colors %}
+                    {% for i in singleProduct.variation_set.all %}
                     <option value="{{i.variationValue}}">{{i.variationValue}}</option>
                     {% endfor %}
                   </select>
               </div>
           </div> <!-- row.// -->
-          <div class="row">
-            <div class="item-option-select">
-                <h6>Choose Size</h6>
-                <select name="size" class="form-control" required>
-                  <option value="" disabled selected>Choose Size Here</option>
-                  <!--Reverse Lookup Ref: https://stackoverflow.com/questions/15306897/django-reverse-lookup-of-foreign-keys-->
-                  {% for i in singleProduct.variation_set.sizes %}
-                  <option value="{{i.variationValue}}">{{i.variationValue}}</option>
-                  {% endfor %}
-                </select>
-            </div>
-        </div> <!-- row.// -->
+         
           
           <hr>
           {% if singleProduct.stock <= 0 %}

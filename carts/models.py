@@ -16,7 +16,7 @@ class CartItem(models.Model):
     #allow logged user to see previous cart itmes
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
     product     = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variations  = models.ManyToManyField(Variation, blank=True)
+    variation  = models.ForeignKey(Variation, on_delete=models.CASCADE, null=True)
     cart        = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
     quantity    = models.IntegerField()
     isActive    = models.BooleanField(default=True)

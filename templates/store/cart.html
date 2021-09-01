@@ -33,7 +33,7 @@
                 <div class="aside"><img src="{{ cartItem.product.images.url}}" class="img-sm"></div>
                 <figcaption class="info">
                     <a href="{{ cartItem.product.getUrl }}" class="title text-dark">{{ cartItem.product.productName }}</a>
-                    <p class="text-muted small">Color: 25 Mpx <br> Size: Canon</p>
+                    <p class="text-muted small">{{ cartItem.variation.variationCategory}}: {{ cartItem.variation.variationValue}}</p>
                 </figcaption>
             </figure>
         </td>
@@ -42,11 +42,11 @@
                         <div class="col"> 
                             <div class="input-group input-spinner">
                                 <div class="input-group-prepend">
-                                <a href="{% url 'removeCart' cartItem.product.id %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
+                                <a href="{% url 'decreaseCartItem' cartItem.id %}" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-minus"></i> </a>
                                 </div>
                                 <input type="text" class="form-control"  value="{{cartItem.quantity}}">
                                 <div class="input-group-append">
-                                <a href="{% url 'addCart' cartItem.product.id %}" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i> </a>
+                                <a href="{% url 'increaseCartItem' cartItem.id %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-plus"></i> </a>
                                 </div>
                             </div> <!-- input-group.// -->
                         </div> <!-- col.// -->
@@ -58,7 +58,7 @@
             </div> <!-- price-wrap .// -->
         </td>
         <td class="text-right"> 
-        <a href="{% url 'removeItem' cartItem.product.id %}" class="btn btn-danger"> Remove</a>
+        <a href="{% url 'removeItem' cartItem.id %}" class="btn btn-danger"> Remove</a>
         </td>
     </tr>
     {% endfor %}
