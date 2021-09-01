@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from store.models import Product, Variation
 from .models import Cart, CartItem
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 # How to use session: Ref https://docs.djangoproject.com/en/3.2/topics/http/sessions/#using-sessions-out-of-views
@@ -92,3 +92,24 @@ def cart(request, total=0, quantity=0, cartItems=None):
     }
     return render(request, 'store/cart.html', context)
     
+@login_required(login_url='login')
+def checkout(request, total=0, quantity=0, cartItems=None):
+    try:
+        cart = Cart.objects.get(cartId=_cartId(request))
+        cartItems = CartItem.objects.filter(cart=cart, isActive=True)
+        for cartItem in cartItems:
+            total += (cartItem.product.price * cartItem.quantity)
+            quantity += cartItem.quantity
+        tax = round((0.07*total),2)
+        totalAfterTax = total + tax
+    except ObjectDoesNotExist:
+        pass
+        
+    context = {
+        'total': total,
+        'quantity': quantity,
+        'cartItems': cartItems,
+        'tax': tax,
+        'totalAfterTax': totalAfterTax
+    }
+    return render(request, 'store/checkout.html', context)
