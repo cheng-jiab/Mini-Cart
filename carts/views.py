@@ -97,9 +97,9 @@ def cart(request, total=0, quantity=0, cartItems=None):
             cart = Cart.objects.get(cartId=_cartId(request))
             cartItems = CartItem.objects.filter(cart=cart, isActive=True)
         for cartItem in cartItems:
-            total += (cartItem.product.price * cartItem.quantity)
+            total += (cartItem.product.price * decimal.Decimal(cartItem.quantity))
             quantity += cartItem.quantity
-        tax = decimal.Decimal('0.07')*total
+        tax = round(decimal.Decimal(0.07) * total,2)
         totalAfterTax = total + tax
     except ObjectDoesNotExist:
         pass
@@ -123,7 +123,7 @@ def checkout(request, total=0, quantity=0, cartItems=None):
         for cartItem in cartItems:
             total += (cartItem.product.price * cartItem.quantity)
             quantity += cartItem.quantity
-        tax = decimal.Decimal('0.07')*total
+        tax = round(decimal.Decimal(0.07) * total,2)
         totalAfterTax = total + tax
     except ObjectDoesNotExist:
         pass

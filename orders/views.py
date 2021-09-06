@@ -27,13 +27,13 @@ def payments(request):
         orderProduct.productPrice = item.product.price
         orderProduct.isOrdered = True
         orderProduct.save()
-        order.isOrdered = True
-        
 
         # Reduce the quantity of the sold product
         product = Product.objects.get(id=item.product.id)
         product.stock -= item.quantity
-    
+
+    order.status = 'Confirmed'
+    order.isOrdered = True
     order.save()
     # clear cart
     CartItem.objects.filter(user=request.user).delete()
@@ -53,7 +53,6 @@ def payments(request):
     # redirect to thank you page
     
     return redirect(reverse('orderComplete', args=[order.id]))
-    return render(request, 'order/orderComplete/'+ order.id +'.html')
 
 # Create your views here.
 def placeOrder(request):
@@ -69,7 +68,7 @@ def placeOrder(request):
         total += cartItem.subtotal()
         quantity += cartItem.quantity
 
-    tax = decimal.Decimal('0.07')*total
+    tax = round(decimal.Decimal(0.07) * total,2)
     totalAfterTax = total + tax
 
     if request.method == "POST":

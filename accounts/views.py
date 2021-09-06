@@ -81,7 +81,7 @@ def login(request):
             messages.success(request, 'You are now logged in.')
             
 
-            return redirect('dashboard')
+            return redirect('store')
         else:
             messages.error(request, "Invalid login credentials")
             return redirect('login')
