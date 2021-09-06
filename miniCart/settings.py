@@ -14,6 +14,7 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv, find_dotenv
 import os
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -23,12 +24,14 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7!#59-&8qayzsn*z8evfie!6%2by-ir2j07j8)v5lne4_7@o$8'
-
+SECRET_KEY =  os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-env.eba-jmsii3zn.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'minicart-env.eba-gbn8umgy.us-west-2.elasticbeanstalk.com'
+    ]
 
 
 # Application definition
@@ -147,7 +150,7 @@ MESSAGE_TAGS = {
 }
 
 #SMTP CONFIGURATION
-load_dotenv(find_dotenv())
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
