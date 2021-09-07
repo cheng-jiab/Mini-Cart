@@ -3,8 +3,13 @@ from category.models import Category
 from django.urls import reverse
 
 VARIATION_CATEGORY_CHOICE=  (
-        ('color', 'color'),
-        ('size', 'size'),
+        ('Color', 'Color'),
+        ('Size', 'Size'),
+        ('Storage', 'Storage'),
+        ('Memory', 'Memory'),
+        ('Material', 'Material'),
+        ('Speed', 'Speed'),
+ 
     )
 
 # Create your models here.
