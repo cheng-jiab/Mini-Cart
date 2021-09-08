@@ -49,8 +49,8 @@ def register(request):
             sendEmail = EmailMessage(mailSubject, message, to=[toEmail])
             sendEmail.send()
 
-            #messages.success(request, 'Thank you for registering, we have sent you a verificcation email to your mailbox. Please verify it.')
-            return redirect('accounts/login/?command=verification&email='+email)
+            messages.success(request, 'Thank you for registering, we have sent you a verificcation email to your mailbox. Please verify it.')
+            return redirect('/accounts/login/?command=verification&email='+email)
 
     else:
         form = RegistrationForm()
@@ -113,7 +113,9 @@ def activate(request, uidb64, token):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    # TODO: User dashborad
+    #return render(request, 'accounts/dashboard.html')
+    return HttpResponse('Sorry, it is still in progress')
 
 
 def forgotPassword(request):

@@ -10,6 +10,12 @@
           <article class="card-body">
             {% include 'includes/alarts.html' %}
             <header class="mb-4"><h4 class="card-title">Sign up</h4></header>
+            <small>
+                Feel free to register using your email and try email activation :) <br>
+                Or just try log in with exist sample user: <br>
+                Email Address: test@a.com <br>
+                    Password: 1234 <br>
+            </small>
             
             <form action="{% url 'register' %}" method="POST">
                 {% csrf_token %}
